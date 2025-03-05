@@ -20,22 +20,15 @@ jobs:
 
         # verify that it is running successfully
         # this is an idempotent command useful for debugging
-        for i in {1..30}; do
-          if docker compose exec -T pg pg_isread -U myuser; then
-            echo "Database ready"
-            break
-          fi
-          echo "Waiting for data ($i/30)"
-          sleep 2
-        done
-
+        docker ps -a
+        
         # after the database starts successfully,
         # it needs time to load the pagila data;
         # this should happen in <1 second,
         # but we sleep for a long time just to be sure that everything is loaded;
         # this is a bit hacky,
         # and a proper check would be to have an infinite loop that terminates once the data has been loaded
-      
+        sleep 20
 
         # run the tests
         docker compose exec -T pg ./run_tests.sh
